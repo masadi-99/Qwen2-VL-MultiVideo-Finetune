@@ -1,0 +1,86 @@
+[
+  {
+    "id": "example_30_videos",
+    "video": [
+      "video_001.mp4",
+      "video_002.mp4", 
+      "video_003.mp4",
+      "video_004.mp4",
+      "video_005.mp4",
+      "video_006.mp4",
+      "video_007.mp4",
+      "video_008.mp4",
+      "video_009.mp4",
+      "video_010.mp4",
+      "video_011.mp4",
+      "video_012.mp4",
+      "video_013.mp4",
+      "video_014.mp4",
+      "video_015.mp4",
+      "video_016.mp4",
+      "video_017.mp4",
+      "video_018.mp4",
+      "video_019.mp4",
+      "video_020.mp4",
+      "video_021.mp4",
+      "video_022.mp4",
+      "video_023.mp4",
+      "video_024.mp4",
+      "video_025.mp4",
+      "video_026.mp4",
+      "video_027.mp4",
+      "video_028.mp4",
+      "video_029.mp4",
+      "video_030.mp4"
+    ],
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<video>\n<video>\n<video>\n<video>\n<video>\n<video>\n<video>\n<video>\n<video>\n<video>\n<video>\n<video>\n<video>\n<video>\n<video>\n<video>\n<video>\n<video>\n<video>\n<video>\n<video>\n<video>\n<video>\n<video>\n<video>\n<video>\n<video>\n<video>\n<video>\n<video>\nAnalyze these 30 video clips and provide a comprehensive summary of the main themes, activities, and patterns you observe across all videos."
+      },
+      {
+        "from": "gpt", 
+        "value": "After analyzing all 30 video clips, I can identify several key themes and patterns:\n\n**Main Themes:**\n1. Daily activities and routines\n2. Natural environments and landscapes\n3. Human interactions and social behaviors\n\n**Key Activities Observed:**\n- People engaging in outdoor recreational activities\n- Urban and rural lifestyle documentation\n- Various forms of transportation and movement\n\n**Patterns Across Videos:**\n- Consistent lighting and time-of-day variations\n- Different seasonal contexts represented\n- Mix of close-up and wide-angle perspectives\n\nThe collection provides a comprehensive view of diverse human experiences and environmental contexts, showing both individual moments and broader social patterns."
+      }
+    ]
+  },
+  {
+    "id": "example_10_videos",
+    "video": [
+      "clip_01.mp4",
+      "clip_02.mp4",
+      "clip_03.mp4",
+      "clip_04.mp4",
+      "clip_05.mp4",
+      "clip_06.mp4",
+      "clip_07.mp4",
+      "clip_08.mp4",
+      "clip_09.mp4",
+      "clip_10.mp4"
+    ],
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<video>\n<video>\n<video>\n<video>\n<video>\n<video>\n<video>\n<video>\n<video>\n<video>\nWhat story do these 10 video clips tell when viewed together?"
+      },
+      {
+        "from": "gpt",
+        "value": "These 10 video clips appear to tell a cohesive narrative about a day in the life, showing:\n\n1. Morning preparations and routines\n2. Commute and travel sequences\n3. Work or daily activities\n4. Lunch break or midday pause\n5. Afternoon activities continuing\n6. Social interactions with others\n7. Evening wind-down activities\n8. Dinner and relaxation time\n9. Night preparations\n10. Reflection on the day\n\nTogether, they create a complete story arc that follows the natural rhythm of a full day, highlighting both routine moments and special interactions that make each day unique."
+      }
+    ]
+  },
+  {
+    "id": "example_single_video_compatibility",
+    "video": "single_video.mp4",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<video>\nWhat do you see in this video?"
+      },
+      {
+        "from": "gpt",
+        "value": "I can see a single video showing [description of the content]. This demonstrates that the multi-video enhanced codebase maintains full backward compatibility with single video samples."
+      }
+    ]
+  }
+]
