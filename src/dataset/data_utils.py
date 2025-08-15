@@ -124,6 +124,38 @@ def get_video_info(video_path, min_pixels, max_pixels, width, height, fps, nfram
 
     return video_input[0], video_kwargs
 
+def get_multiple_videos_info(video_paths, min_pixels, max_pixels, width, height, fps, nframes):
+    """Process multiple videos together - needed for 30+ video samples"""
+    contents = []
+    
+    for video_path in video_paths:
+        content = {
+            "type": "video", 
+            "video": video_path,
+            "min_pixels": min_pixels,
+            "max_pixels": max_pixels,
+        }
+
+        if nframes is not None:
+            content["nframes"] = nframes
+        else:
+            content["fps"] = fps
+
+        if width is not None and height is not None:
+            content["resized_width"] = width
+            content["resized_height"] = height
+            
+        contents.append(content)
+    
+    messages = [
+        {"role": "user", 
+         "content": contents  # Pass all videos at once
+        }
+    ]
+
+    _, video_inputs, video_kwargs = process_vision_info(messages, return_video_kwargs=True)
+    return video_inputs, video_kwargs
+
 def samples_per_class_from_ids(label_ids, num_classes):
     
     counts = torch.bincount(

@@ -14,7 +14,7 @@ from src.constants import (
     SYSTEM_MESSAGE,
 )
 
-from .data_utils import get_image_info, get_video_info, pad_sequence, replace_image_tokens
+from .data_utils import get_image_info, get_video_info, get_multiple_videos_info, pad_sequence, replace_image_tokens
 
 
 class DPODataset(Dataset):
@@ -90,13 +90,20 @@ class DPODataset(Dataset):
             if isinstance(video_files, str):
                 video_files = [video_files]
 
-            videos = []
+            # Fix video file paths
+            processed_video_files = []
             for video_file in video_files:
                 if not os.path.exists(video_file):
                     if not video_file.startswith("http"):
                         video_file = os.path.join(video_folder, video_file)
-                video_input, video_kwargs = get_video_info(video_file, self.video_min_pixel, self.video_max_pixel, self.video_resized_w, self.video_resized_h, self.fps, self.nframes)
-                videos.append(video_input)
+                processed_video_files.append(video_file)
+            
+            # Process all videos together to avoid fps conflicts with 30+ videos
+            if len(processed_video_files) > 1:
+                videos, video_kwargs = get_multiple_videos_info(processed_video_files, self.video_min_pixel, self.video_max_pixel, self.video_resized_w, self.video_resized_h, self.fps, self.nframes)
+            else:
+                video_input, video_kwargs = get_video_info(processed_video_files[0], self.video_min_pixel, self.video_max_pixel, self.video_resized_w, self.video_resized_h, self.fps, self.nframes)
+                videos = [video_input]
         else:
             grid_key = None
             pixel_key = None
