@@ -1,0 +1,77 @@
+[
+  {
+    "id": "test_sample_1",
+    "video": [
+      "test_video_001.mp4",
+      "test_video_002.mp4", 
+      "test_video_003.mp4",
+      "test_video_004.mp4",
+      "test_video_005.mp4"
+    ],
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<video>\n<video>\n<video>\n<video>\n<video>\nAnalyze these 5 video clips and describe the main activities you observe."
+      },
+      {
+        "from": "assistant",
+        "value": "After analyzing the 5 video clips, I can observe several main activities:\n\n1. **Outdoor Recreation**: The first video shows people engaged in hiking activities on a mountain trail.\n2. **Urban Transportation**: The second clip features city traffic and pedestrian movements.\n3. **Social Interaction**: The third video captures a group of friends having a conversation in a park.\n4. **Work Environment**: The fourth clip shows office workers collaborating on a project.\n5. **Evening Leisure**: The final video depicts a family enjoying dinner together.\n\nOverall, these clips represent a diverse range of human activities spanning work, leisure, social interaction, and daily transportation."
+      }
+    ]
+  },
+  {
+    "id": "test_sample_2", 
+    "video": [
+      "sequence_01.mp4",
+      "sequence_02.mp4",
+      "sequence_03.mp4"
+    ],
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<video>\n<video>\n<video>\nWhat story do these three videos tell when viewed in sequence?"
+      },
+      {
+        "from": "assistant", 
+        "value": "These three videos tell the story of a complete morning routine:\n\nThe sequence begins with someone waking up and getting out of bed, showing the transition from sleep to consciousness. The second video continues with morning preparations - brushing teeth, washing face, and getting dressed for the day. The final video shows the person leaving their home and walking to work or their daily destination.\n\nTogether, they create a cohesive narrative about the universal human experience of starting a new day, highlighting the routine yet essential activities that prepare us for daily life."
+      }
+    ]
+  },
+  {
+    "id": "test_sample_3",
+    "video": "single_test_video.mp4",
+    "conversations": [
+      {
+        "from": "human", 
+        "value": "<video>\nDescribe what you see in this video clip."
+      },
+      {
+        "from": "assistant",
+        "value": "In this video clip, I can see a beautiful sunset scene at a beach. The golden sun is setting over the ocean horizon, casting warm orange and pink hues across the sky. Gentle waves are rolling onto the sandy shore, and there are a few seagulls flying in the distance. The peaceful atmosphere and natural beauty create a serene and calming visual experience."
+      }
+    ]
+  },
+  {
+    "id": "test_sample_4",
+    "video": [
+      "cooking_01.mp4",
+      "cooking_02.mp4", 
+      "cooking_03.mp4",
+      "cooking_04.mp4",
+      "cooking_05.mp4",
+      "cooking_06.mp4",
+      "cooking_07.mp4",
+      "cooking_08.mp4"
+    ],
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<video>\n<video>\n<video>\n<video>\n<video>\n<video>\n<video>\n<video>\nWalk me through this cooking process step by step."
+      },
+      {
+        "from": "assistant",
+        "value": "Based on these 8 cooking videos, here's the step-by-step process:\n\n**Step 1**: Preparation - Gathering all ingredients and washing vegetables\n**Step 2**: Chopping - Dicing onions, tomatoes, and other vegetables into uniform pieces\n**Step 3**: Heat preparation - Heating oil in a large pan over medium heat\n**Step 4**: Sautéing - Adding onions first and cooking until translucent\n**Step 5**: Building flavors - Adding garlic, spices, and other aromatics\n**Step 6**: Main cooking - Adding the primary ingredients and stirring well\n**Step 7**: Simmering - Allowing the dish to cook slowly while stirring occasionally\n**Step 8**: Final touches - Adding final seasonings, garnishes, and plating\n\nThis appears to be a traditional stir-fry or curry preparation method, emphasizing proper timing and layering of flavors."
+      }
+    ]
+  }
+]
