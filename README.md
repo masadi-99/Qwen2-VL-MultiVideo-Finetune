@@ -1,6 +1,16 @@
-# Fine-tuning Qwen2-VL Series
+# Fine-tuning Qwen2-VL Series with Multi-Video Support
 
-This repository contains a script for training [Qwen2-VL](https://huggingface.co/Qwen/Qwen2-VL-7B-Instruct) and [Qwen2.5-VL](https://huggingface.co/Qwen/Qwen2.5-VL-7B-Instruct) with only using HuggingFace and [Liger-Kernel](https://github.com/linkedin/Liger-Kernel).
+This repository contains enhanced scripts for training [Qwen2-VL](https://huggingface.co/Qwen/Qwen2-VL-7B-Instruct) and [Qwen2.5-VL](https://huggingface.co/Qwen/Qwen2.5-VL-7B-Instruct) with **support for 30+ videos per sample** using HuggingFace and [Liger-Kernel](https://github.com/linkedin/Liger-Kernel).
+
+## 🚀 New Multi-Video Features
+
+- ✅ **Train with 30+ videos per conversation sample**
+- ✅ **Fixed fps parameter conflicts for multiple videos** 
+- ✅ **Memory-optimized processing for large video datasets**
+- ✅ **Backward compatible with single-video datasets**
+- ✅ **Ready-to-use training scripts and examples**
+
+👉 **See [MULTIVIDEO_README.md](MULTIVIDEO_README.md) for complete multi-video documentation**
 
 ## Other projects
 
@@ -13,6 +23,7 @@ This repository contains a script for training [Qwen2-VL](https://huggingface.co
 
 ## Update
 
+- [2024/12/XX] 🔥**NEW: Multi-Video Support** - Train with 30+ videos per sample! Fixed fps conflicts and added memory optimization.
 - [2025/08/08] 🔥Monkey patch Qwen2.5-VL's window attention and forward for using less memory and speedups.
 - [2025/07/25] Updated Classification training script for experimental feature.
 - [2025/05/29] 🔥Supports GRPO training.
