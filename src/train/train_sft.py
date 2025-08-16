@@ -5,7 +5,7 @@ import ast
 from transformers import AutoProcessor, BitsAndBytesConfig, Qwen2VLForConditionalGeneration, HfArgumentParser, Qwen2_5_VLForConditionalGeneration
 from src.trainer import QwenSFTTrainer
 from src.dataset import make_supervised_data_module
-from src.params import DataArguments, ModelArguments, TrainingArguments
+from src.params import DataArguments, ModelArguments, CLSArguments
 from train.train_utils import get_peft_state_maybe_zero_3, get_peft_state_non_lora_maybe_zero_3, safe_save_model_for_hf_trainer
 import pathlib
 from liger_kernel.transformers import apply_liger_kernel_to_qwen2_vl, apply_liger_kernel_to_qwen2_5_vl
@@ -62,7 +62,7 @@ def train():
     global local_rank
 
     parser = HfArgumentParser(
-        (ModelArguments, DataArguments, TrainingArguments))
+        (ModelArguments, DataArguments, CLSArguments))
     
     model_args, data_args, training_args = parser.parse_args_into_dataclasses()
     use_liger = training_args.use_liger
