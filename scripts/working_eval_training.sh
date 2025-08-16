@@ -1,45 +1,45 @@
 #!/bin/bash
 
-# Your Multi-Video Training Script with Live Evaluation
-# Using your specific train/test split paths
+# Working Multi-Video Training Script with Evaluation
+# This version addresses all the argument parsing issues systematically
 
 MODEL_NAME="Qwen/Qwen2.5-VL-3B-Instruct"
 
 export PYTHONPATH=src:$PYTHONPATH
 
 # BATCH SIZE CONFIGURATION FOR MULTI-VIDEO
-GLOBAL_BATCH_SIZE=16  # Reduced from 128 for multi-video
-BATCH_PER_DEVICE=1    # Keep at 1 for 30+ videos  
-NUM_DEVICES=8         # Adjust based on your setup
+GLOBAL_BATCH_SIZE=16
+BATCH_PER_DEVICE=1
+NUM_DEVICES=8
 GRAD_ACCUM_STEPS=$((GLOBAL_BATCH_SIZE / (BATCH_PER_DEVICE * NUM_DEVICES)))
 
-echo "=== Your Multi-Video Training with Live Evaluation ==="
+echo "=== Working Multi-Video Training with Evaluation ==="
 echo "Model: $MODEL_NAME"
 echo "Global Batch Size: $GLOBAL_BATCH_SIZE"
 echo "Batch Per Device: $BATCH_PER_DEVICE"
 echo "Gradient Accumulation Steps: $GRAD_ACCUM_STEPS"
 echo "====================================================="
 
+# Note: Using explicit TRUE/FALSE values instead of boolean flags
+# This addresses the custom TrainingArguments parsing issues
+
 deepspeed src/train/train_sft.py \
     --use_liger True \
     --deepspeed scripts/zero3_offload.json \
     --model_id $MODEL_NAME \
     \
-    `# YOUR TRAINING DATA` \
+    `# TRAINING DATA` \
     --data_path /oak/stanford/groups/euan/users/masadi/stanford_echo/lv_vqa_llm_only_video_train.json \
     --image_folder / \
     \
-    `# YOUR EVALUATION DATA` \
+    `# EVALUATION DATA` \
     --eval_path /oak/stanford/groups/euan/users/masadi/stanford_echo/lv_vqa_llm_only_video_test.json \
     --eval_image_folder / \
     \
-    `# EVALUATION SETTINGS (FIXED)` \
-    --do_eval \
-    --evaluation_strategy steps \
+    `# EVALUATION SETTINGS - Using working pattern from cls script` \
+    --eval_strategy steps \
     --eval_steps 50 \
-    --eval_accumulation_steps 1 \
     --per_device_eval_batch_size 1 \
-    --eval_delay 0 \
     \
     `# MODEL SETTINGS` \
     --remove_unused_columns False \
@@ -59,7 +59,7 @@ deepspeed src/train/train_sft.py \
     --per_device_train_batch_size $BATCH_PER_DEVICE \
     --gradient_accumulation_steps $GRAD_ACCUM_STEPS \
     \
-    `# VIDEO PROCESSING SETTINGS FOR 30+ VIDEOS` \
+    `# VIDEO PROCESSING SETTINGS` \
     --video_max_pixels $((64 * 64)) \
     --video_resized_width 64 \
     --video_resized_height 64 \
@@ -77,12 +77,14 @@ deepspeed src/train/train_sft.py \
     --warmup_ratio 0.03 \
     --lr_scheduler_type "cosine" \
     \
-    `# LOGGING AND SAVING (STRATEGIES MUST MATCH)` \
+    `# LOGGING AND SAVING - Using working pattern from cls script` \
     --logging_steps 10 \
-    --logging_strategy steps \
     --save_strategy steps \
     --save_steps 50 \
     --save_total_limit 3 \
+    --load_best_model_at_end True \
+    --metric_for_best_model "eval_loss" \
+    --greater_is_better False \
     \
     `# REPORTING` \
     --tf32 True \
@@ -92,8 +94,6 @@ deepspeed src/train/train_sft.py \
 echo ""
 echo "Training with evaluation completed!"
 echo ""
-echo "📊 To view live metrics:"
-echo "Check your Wandb dashboard: https://wandb.ai"
-echo ""
+echo "📊 Check your Wandb dashboard for live metrics"
 echo "📈 Evaluation results logged every 50 steps"
-echo "📁 Best model saved based on eval_loss"
+echo "📁 Model checkpoints saved every 50 steps"
