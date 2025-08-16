@@ -265,6 +265,21 @@ def make_supervised_data_module(model_id, processor, data_args):
     )
     data_collator = DataCollatorForSupervisedDataset(pad_token_id=processor.tokenizer.pad_token_id)
 
+    # Create evaluation dataset if eval_path is provided
+    eval_dataset = None
+    if data_args.eval_path is not None:
+        print(f"Loading evaluation dataset from: {data_args.eval_path}")
+        eval_data_args = copy.deepcopy(data_args)
+        # Use eval_image_folder if provided, otherwise use the same folder as training
+        if data_args.eval_image_folder is not None:
+            eval_data_args.image_folder = data_args.eval_image_folder
+        eval_data_args.data_path = data_args.eval_path
+        
+        eval_dataset = SupervisedDataset(
+            data_path=eval_data_args.data_path, processor=processor, data_args=eval_data_args, model_id=model_id
+        )
+        print(f"Evaluation dataset loaded: {len(eval_dataset)} samples")
+
     return dict(train_dataset=sft_dataset,
-                eval_dataset=None,
+                eval_dataset=eval_dataset,
                 data_collator=data_collator)
