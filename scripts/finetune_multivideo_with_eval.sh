@@ -37,11 +37,9 @@ deepspeed src/train/train_sft.py \
     --eval_path /path/to/your/eval_dataset.json \
     --eval_image_folder /path/to/your/eval/video/folder \
     \
-    `# EVALUATION SETTINGS` \
-    --do_eval \
-    --evaluation_strategy steps \
+    `# EVALUATION SETTINGS - FIXED FOR CLSArguments` \
+    --eval_strategy steps \
     --eval_steps 50 \
-    --eval_accumulation_steps 1 \
     --per_device_eval_batch_size 1 \
     \
     `# MODEL SETTINGS` \
@@ -80,26 +78,26 @@ deepspeed src/train/train_sft.py \
     --warmup_ratio 0.03 \
     --lr_scheduler_type "cosine" \
     \
-    `# LOGGING AND SAVING WITH EVALUATION` \
+    `# LOGGING AND SAVING - MATCHED WITH EVAL STRATEGY` \
     --logging_steps 10 \
-    --logging_strategy steps \
     --save_strategy steps \
     --save_steps 50 \
     --save_total_limit 3 \
-    --load_best_model_at_end \
+    --load_best_model_at_end True \
     --metric_for_best_model eval_loss \
     --greater_is_better False \
     \
     `# REPORTING` \
     --tf32 True \
-    --report_to tensorboard \
+    --report_to wandb \
     --lazy_preprocess True
 
 echo ""
-echo "Training with evaluation completed!"
+echo "✅ Training with evaluation completed!"
 echo ""
 echo "📊 To view live metrics:"
-echo "tensorboard --logdir output/multivideo_training_with_eval/runs"
+echo "  - Wandb dashboard: https://wandb.ai"
+echo "  - Local logs: output/multivideo_training_with_eval/"
 echo ""
-echo "📈 Evaluation results are logged every 50 steps"
-echo "📁 Best model saved based on eval_loss"
+echo "📈 Evaluation results logged every 50 steps"
+echo "📁 Best model automatically saved based on eval_loss"
