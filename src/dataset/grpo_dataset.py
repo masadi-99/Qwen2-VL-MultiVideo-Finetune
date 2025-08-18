@@ -180,9 +180,18 @@ class GRPODataset(Dataset):
                         video_file = os.path.join(video_folder, video_file)
                 processed_video_files.append(video_file)
 
-            # Use EXACTLY the same approach as SFT: individual content items for each video
-            # This is the key - SFT creates separate content items, not a single item with video list
-            for video_file in processed_video_files:
+            # GRPO has tensor dimension constraints with many videos
+            # Dynamically limit based on batch processing constraints
+            # The IndexError occurs when videos * batch_size exceeds processor limits
+            
+            max_videos_for_grpo = min(len(processed_video_files), 5)  # Conservative limit
+            used_video_files = processed_video_files[:max_videos_for_grpo]
+            
+            if len(processed_video_files) > max_videos_for_grpo:
+                print(f"GRPO: Using {max_videos_for_grpo}/{len(processed_video_files)} videos due to tensor dimension constraints")
+            
+            # Create individual content items for each video (like SFT approach)
+            for video_file in used_video_files:
                 video_content = {
                     "type": "video", 
                     "video": video_file,  # Single video path per content item (like SFT)
