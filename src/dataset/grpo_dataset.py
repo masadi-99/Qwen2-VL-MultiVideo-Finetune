@@ -156,10 +156,9 @@ class GRPODataset(Dataset):
                         video_file = os.path.join(video_folder, video_file)
                 processed_video_files.append(video_file)
 
-            # Process videos using the content structure (different from SFT/DPO)
-            # GRPO uses content format while SFT/DPO use direct processing
-            for video_file in processed_video_files:
-                contents.append(get_video_content(video_file, self.video_min_pixel, self.video_max_pixel, self.video_resized_w, self.video_resized_h, self.fps, self.nframes))
+            # Process videos like classification dataset (single content item with all videos)
+            # This prevents the IndexError in GRPO trainer
+            contents.append(get_video_content(processed_video_files, self.video_min_pixel, self.video_max_pixel, self.video_resized_w, self.video_resized_h, self.fps, self.nframes))
 
         conversations = copy.deepcopy(llava_to_openai(sources['conversations'], is_video=is_video))
 
