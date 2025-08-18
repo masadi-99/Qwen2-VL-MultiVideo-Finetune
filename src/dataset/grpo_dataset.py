@@ -62,25 +62,49 @@ def get_image_content(image_path, min_pixel, max_pixel, width, height):
 
 def get_video_content(video_path, min_pixels, max_pixels, width, height, fps, nframes):
     # Using this because of process_vision_info function
-    # Need to fix this in the future
-    content = {
-        "type": "video", 
-        "video": video_path,
-        "min_pixels": min_pixels,
-        "max_pixels": max_pixels,
-    }
-
-    if nframes is not None:
-        content["nframes"] = nframes
-    else:
-        content["fps"] = fps
-
-    if width is not None and height is not None:
-        content["resized_width"] = width
-        content["resized_height"] = height
+    # Handle both single video path (string) and multiple video paths (list)
     
+    if isinstance(video_path, list):
+        # Multiple videos - create content for each video
+        contents = []
+        for path in video_path:
+            content = {
+                "type": "video", 
+                "video": path,
+                "min_pixels": min_pixels,
+                "max_pixels": max_pixels,
+            }
 
-    return content
+            if nframes is not None:
+                content["nframes"] = nframes
+            else:
+                content["fps"] = fps
+
+            if width is not None and height is not None:
+                content["resized_width"] = width
+                content["resized_height"] = height
+                
+            contents.append(content)
+        return contents
+    else:
+        # Single video - original behavior
+        content = {
+            "type": "video", 
+            "video": video_path,
+            "min_pixels": min_pixels,
+            "max_pixels": max_pixels,
+        }
+
+        if nframes is not None:
+            content["nframes"] = nframes
+        else:
+            content["fps"] = fps
+
+        if width is not None and height is not None:
+            content["resized_width"] = width
+            content["resized_height"] = height
+        
+        return content
 
 class GRPODataset(Dataset):
     """Dataset for DPO training"""
@@ -156,9 +180,12 @@ class GRPODataset(Dataset):
                         video_file = os.path.join(video_folder, video_file)
                 processed_video_files.append(video_file)
 
-            # Process videos like classification dataset (single content item with all videos)
-            # This prevents the IndexError in GRPO trainer
-            contents.append(get_video_content(processed_video_files, self.video_min_pixel, self.video_max_pixel, self.video_resized_w, self.video_resized_h, self.fps, self.nframes))
+            # Process videos - get_video_content returns list for multiple videos
+            video_contents = get_video_content(processed_video_files, self.video_min_pixel, self.video_max_pixel, self.video_resized_w, self.video_resized_h, self.fps, self.nframes)
+            if isinstance(video_contents, list):
+                contents.extend(video_contents)  # Add all video contents
+            else:
+                contents.append(video_contents)  # Single video content
 
         conversations = copy.deepcopy(llava_to_openai(sources['conversations'], is_video=is_video))
 
