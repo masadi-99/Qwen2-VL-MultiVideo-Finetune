@@ -180,12 +180,17 @@ class GRPODataset(Dataset):
                         video_file = os.path.join(video_folder, video_file)
                 processed_video_files.append(video_file)
 
-            # Process videos - get_video_content returns list for multiple videos
-            video_contents = get_video_content(processed_video_files, self.video_min_pixel, self.video_max_pixel, self.video_resized_w, self.video_resized_h, self.fps, self.nframes)
-            if isinstance(video_contents, list):
-                contents.extend(video_contents)  # Add all video contents
-            else:
-                contents.append(video_contents)  # Single video content
+            # GRPO-specific approach: Limit videos to prevent indexing issues
+            # The GRPO trainer has a different architecture that can't handle as many videos
+            max_videos_for_grpo = 10  # Conservative limit for GRPO
+            limited_video_files = processed_video_files[:max_videos_for_grpo]
+            
+            if len(processed_video_files) > max_videos_for_grpo:
+                print(f"GRPO: Limiting videos from {len(processed_video_files)} to {max_videos_for_grpo} due to trainer constraints")
+            
+            # Create individual content items for each video
+            for video_file in limited_video_files:
+                contents.append(get_video_content(video_file, self.video_min_pixel, self.video_max_pixel, self.video_resized_w, self.video_resized_h, self.fps, self.nframes))
 
         conversations = copy.deepcopy(llava_to_openai(sources['conversations'], is_video=is_video))
 

@@ -5,10 +5,12 @@ This system enables **GRPO (Group Relative Policy Optimization)** training on da
 ## 🎯 Key Features
 
 ### ✅ Multi-Video GRPO Support
-- **Process 30+ videos per sample** without memory conflicts
+- **Process up to 10 videos per sample** (GRPO trainer limitation)
 - **Fixed GRPO dataset** to handle multiple video files correctly
-- **Memory-optimized processing** for large video datasets
+- **Memory-optimized processing** for multi-video datasets
 - **Compatible with existing GRPO training pipeline**
+
+⚠️ **Note**: GRPO has a lower video limit (10) compared to SFT/DPO (30+) due to trainer architecture differences.
 
 ### 🔢 Custom Numerical Reward Function
 - **Automatic number extraction** from text (handles percentages like "65.4%")
@@ -31,7 +33,7 @@ Your dataset should have this structure for GRPO training:
       "video1.mp4", 
       "video2.mp4", 
       "video3.mp4"
-      // ... up to 30+ videos
+      // ... up to 10 videos (GRPO limitation)
     ],
     "conversations": [
       {
@@ -95,13 +97,13 @@ Numbers farther from the center (50) receive bonus rewards:
 
 ## 📊 Memory Configuration
 
-### For 30 Videos per Sample on 8x H100:
+### For 10 Videos per Sample on 8x H100:
 
 | Configuration | Video Resolution | Memory per Sample | GRPO Samples | Total Memory | Status |
 |---------------|------------------|-------------------|--------------|--------------|---------|
-| **Recommended** | 84×84 | ~12-15GB | 2-4 samples | ~50-60GB | ✅ **Optimal** |
-| Conservative | 64×64 | ~8-12GB | 2-4 samples | ~30-45GB | ✅ **Safe** |
-| Aggressive | 112×112 | ~25-30GB | 2-4 samples | ~100+GB | ⚠️ **Risky** |
+| **Recommended** | 84×84 | ~4-6GB | 2-4 samples | ~20-30GB | ✅ **Optimal** |
+| Conservative | 64×64 | ~3-4GB | 2-4 samples | ~15-20GB | ✅ **Safe** |
+| Aggressive | 112×112 | ~8-12GB | 2-4 samples | ~40-50GB | ✅ **Good** |
 
 ### Key GRPO Parameters
 
