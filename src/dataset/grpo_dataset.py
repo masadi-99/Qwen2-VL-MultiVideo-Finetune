@@ -180,17 +180,30 @@ class GRPODataset(Dataset):
                         video_file = os.path.join(video_folder, video_file)
                 processed_video_files.append(video_file)
 
-            # GRPO-specific approach: Limit videos to prevent indexing issues
-            # The GRPO trainer has a different architecture that can't handle as many videos
-            max_videos_for_grpo = 10  # Conservative limit for GRPO
-            limited_video_files = processed_video_files[:max_videos_for_grpo]
-            
-            if len(processed_video_files) > max_videos_for_grpo:
-                print(f"GRPO: Limiting videos from {len(processed_video_files)} to {max_videos_for_grpo} due to trainer constraints")
-            
-            # Create individual content items for each video
-            for video_file in limited_video_files:
-                contents.append(get_video_content(video_file, self.video_min_pixel, self.video_max_pixel, self.video_resized_w, self.video_resized_h, self.fps, self.nframes))
+            # Use the same approach as SFT for multiple videos
+            # Process all videos together like SFT does to avoid indexing issues in GRPO trainer
+            if len(processed_video_files) > 1:
+                # Create a single content item containing all videos (like SFT)
+                all_videos_content = {
+                    "type": "video",
+                    "video": processed_video_files,  # Pass as list
+                    "min_pixels": self.video_min_pixel,
+                    "max_pixels": self.video_max_pixel,
+                }
+                
+                if self.nframes is not None:
+                    all_videos_content["nframes"] = self.nframes
+                else:
+                    all_videos_content["fps"] = self.fps
+                    
+                if self.video_resized_w is not None and self.video_resized_h is not None:
+                    all_videos_content["resized_width"] = self.video_resized_w
+                    all_videos_content["resized_height"] = self.video_resized_h
+                    
+                contents.append(all_videos_content)
+            else:
+                # Single video
+                contents.append(get_video_content(processed_video_files[0], self.video_min_pixel, self.video_max_pixel, self.video_resized_w, self.video_resized_h, self.fps, self.nframes))
 
         conversations = copy.deepcopy(llava_to_openai(sources['conversations'], is_video=is_video))
 
