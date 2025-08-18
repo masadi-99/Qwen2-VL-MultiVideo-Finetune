@@ -7,14 +7,27 @@ import ujson as json
 from torch.utils.data import Dataset
 
 from src.params import DataArguments
-from src.constants import SYSTEM_MESSAGE
+from src.constants import (
+    SYSTEM_MESSAGE,
+    DEFAULT_IMAGE_TOKEN,
+    DEFAULT_VIDEO_TOKEN,
+    LLAVA_IMAGE_TOKEN,
+    LLAVA_VIDEO_TOKEN,
+    VISION_START_TOKEN,
+    VISION_END_TOKEN,
+)
 
 import re
 
 def replace_image_tokens(input_string, is_video=False):
-    pattern = r'\n?' + re.escape("<image>") + r'\n?' if not is_video else r'\n?' + re.escape("<video>") + r'\n?'
-
-    return re.sub(pattern, '', input_string)
+    if is_video:
+        pattern = r'\n?' + re.escape(LLAVA_VIDEO_TOKEN) + r'\n?'
+        replacement = VISION_START_TOKEN + DEFAULT_VIDEO_TOKEN + VISION_END_TOKEN
+    else:
+        pattern = r'\n?' + re.escape(LLAVA_IMAGE_TOKEN) + r'\n?'
+        replacement = VISION_START_TOKEN + DEFAULT_IMAGE_TOKEN + VISION_END_TOKEN
+    
+    return re.sub(pattern, replacement, input_string)
 
 def llava_to_openai(conversations, is_video=False):
     role_mapping = {"human": "user", "gpt": "assistant"}
