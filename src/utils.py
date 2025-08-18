@@ -111,17 +111,36 @@ def get_model_name_from_path(model_path):
     
 def load_reward_funcs(
     module_path: str = "train.reward_funcs",
+    specific_funcs: List[str] = None,
     *,
     name_pred = lambda n: n.endswith("_reward"),
     obj_pred  = lambda o: callable(o),
     keep_order: bool = True
 ) -> List[Callable]:
-
+    """
+    Load reward functions from a module.
+    
+    Args:
+        module_path: Path to the module containing reward functions
+        specific_funcs: List of specific function names to load (if None, loads all matching)
+        name_pred: Predicate to filter function names (ignored if specific_funcs is provided)
+        obj_pred: Predicate to filter objects (must be callable)
+        keep_order: Whether to keep functions in source order
+    """
     mod: ModuleType = importlib.import_module(module_path)
     
     members = inspect.getmembers(mod, predicate=obj_pred)
 
-    reward_funcs = [(n, o) for n, o in members if name_pred(n)]
+    if specific_funcs is not None:
+        # Load only specific functions
+        reward_funcs = [(n, o) for n, o in members if n in specific_funcs]
+        if len(reward_funcs) != len(specific_funcs):
+            found_funcs = [n for n, _ in reward_funcs]
+            missing_funcs = set(specific_funcs) - set(found_funcs)
+            raise ValueError(f"Could not find reward functions: {missing_funcs}")
+    else:
+        # Load all functions matching the predicate
+        reward_funcs = [(n, o) for n, o in members if name_pred(n)]
 
     if keep_order:
         reward_funcs.sort(key=lambda pair: inspect.getsourcelines(pair[1])[1])

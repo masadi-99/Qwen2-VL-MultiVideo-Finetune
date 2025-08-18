@@ -135,10 +135,17 @@ class GRPODataset(Dataset):
             if isinstance(video_files, str):
                 video_files = [video_files]
 
+            # Fix video file paths
+            processed_video_files = []
             for video_file in video_files:
                 if not os.path.exists(video_file):
                     if not video_file.startswith("http"):
                         video_file = os.path.join(video_folder, video_file)
+                processed_video_files.append(video_file)
+
+            # Process videos using the content structure (different from SFT/DPO)
+            # GRPO uses content format while SFT/DPO use direct processing
+            for video_file in processed_video_files:
                 contents.append(get_video_content(video_file, self.video_min_pixel, self.video_max_pixel, self.video_resized_w, self.video_resized_h, self.fps, self.nframes))
 
         conversations = copy.deepcopy(llava_to_openai(sources['conversations'], is_video=is_video))
