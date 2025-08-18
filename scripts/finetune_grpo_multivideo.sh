@@ -13,8 +13,8 @@ export PYTHONPATH=src:$PYTHONPATH
 
 # BATCH SIZE CONFIGURATION FOR MULTI-VIDEO GRPO
 # GRPO requires generating multiple samples per prompt, memory usage is high
-GLOBAL_BATCH_SIZE=8    # Reduced from SFT due to GRPO memory requirements
-BATCH_PER_DEVICE=1     # Keep at 1 for 30+ videos with GRPO
+GLOBAL_BATCH_SIZE=16   # Updated to match user's settings
+BATCH_PER_DEVICE=2     # Updated to match user's settings
 NUM_DEVICES=8          # Adjust based on your setup
 GRAD_ACCUM_STEPS=$((GLOBAL_BATCH_SIZE / (BATCH_PER_DEVICE * NUM_DEVICES)))
 
@@ -27,12 +27,12 @@ echo "Reward Function: numerical_video_reward"
 echo "========================================================="
 
 deepspeed src/train/train_grpo_multivideo.py \
-    --deepspeed scripts/zero3_offload.json \
+    --deepspeed scripts/zero3.json \
     --model_id $MODEL_NAME \
     \
     `# TRAINING DATA` \
-    --data_path /path/to/your/train_dataset.json \
-    --image_folder /path/to/your/video/folder \
+    --data_path /oak/stanford/groups/euan/users/masadi/stanford_echo/lv_vqa_llm_only_video_train.json \
+    --image_folder / \
     \
     `# MODEL SETTINGS` \
     --remove_unused_columns False \
@@ -59,6 +59,7 @@ deepspeed src/train/train_grpo_multivideo.py \
     --temperature 0.7 \
     --top_p 0.9 \
     --max_completion_length 512 \
+    --num_generations 2 \
     \
     `# VIDEO PROCESSING SETTINGS FOR 30+ VIDEOS` \
     --video_max_pixels $((84 * 84)) \

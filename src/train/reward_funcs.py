@@ -2,7 +2,13 @@ import os
 import re
 import math
 from datetime import datetime
-from math_verify import parse, verify
+
+# Optional import for accuracy_reward function
+try:
+    from math_verify import parse, verify
+except ImportError:
+    parse = None
+    verify = None
 
 def accuracy_reward(completions, assistant, **kwargs):
     """Reward function that checks if the completion is correct using either symbolic verification or exact string matching."""
@@ -12,13 +18,14 @@ def accuracy_reward(completions, assistant, **kwargs):
     current_time = datetime.now().strftime("%d-%H-%M-%S-%f")
     for content, sol in zip(contents, solution):
         reward = 0.0
-        # Try symbolic verification first
-        try:
-            answer = parse(content)
-            if float(verify(answer, parse(sol))) > 0:
-                reward = 1.0
-        except Exception:
-            pass  # Continue to next verification method if this fails
+        # Try symbolic verification first (if math_verify is available)
+        if parse is not None and verify is not None:
+            try:
+                answer = parse(content)
+                if float(verify(answer, parse(sol))) > 0:
+                    reward = 1.0
+            except Exception:
+                pass  # Continue to next verification method if this fails
 
         # If symbolic verification failed, try string matching
         if reward == 0.0:
