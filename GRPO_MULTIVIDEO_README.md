@@ -5,12 +5,10 @@ This system enables **GRPO (Group Relative Policy Optimization)** training on da
 ## 🎯 Key Features
 
 ### ✅ Multi-Video GRPO Support
-- **Process up to 5 videos per sample** (GRPO tensor constraint)
-- **Automatic video limiting** based on batch processing constraints
-- **Memory-optimized processing** for multi-video datasets
+- **Process 30+ videos per sample** with single content item structure
+- **Fixed tensor indexing issues** in GRPO trainer batching
+- **Memory-optimized processing** for large video datasets
 - **Compatible with existing GRPO training pipeline**
-
-⚠️ **GRPO Limitation**: Due to tensor dimension constraints in the GRPO trainer architecture, videos are automatically limited to 5 per sample to prevent IndexError. For training with 30+ videos, use SFT instead.
 
 ### 🔢 Custom Numerical Reward Function
 - **Automatic number extraction** from text (handles percentages like "65.4%")

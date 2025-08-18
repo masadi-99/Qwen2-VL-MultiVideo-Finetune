@@ -13,8 +13,8 @@ export PYTHONPATH=src:$PYTHONPATH
 
 # BATCH SIZE CONFIGURATION FOR MULTI-VIDEO GRPO
 # GRPO requires generating multiple samples per prompt, memory usage is high
-GLOBAL_BATCH_SIZE=8    # Reduced for multi-video tensor constraints
-BATCH_PER_DEVICE=1     # Reduced for multi-video tensor constraints
+GLOBAL_BATCH_SIZE=16   # Restored - issue was data structure not batch size
+BATCH_PER_DEVICE=2     # Restored - issue was data structure not batch size
 NUM_DEVICES=8          # Adjust based on your setup
 GRAD_ACCUM_STEPS=$((GLOBAL_BATCH_SIZE / (BATCH_PER_DEVICE * NUM_DEVICES)))
 

@@ -180,35 +180,25 @@ class GRPODataset(Dataset):
                         video_file = os.path.join(video_folder, video_file)
                 processed_video_files.append(video_file)
 
-            # GRPO has tensor dimension constraints with many videos
-            # Dynamically limit based on batch processing constraints
-            # The IndexError occurs when videos * batch_size exceeds processor limits
+            # For GRPO: Create a single content item containing all videos
+            # This avoids the IndexError from individual video content items being batched
+            all_videos_content = {
+                "type": "video",
+                "video": processed_video_files,  # Pass all videos as a single list
+                "min_pixels": self.video_min_pixel,
+                "max_pixels": self.video_max_pixel,
+            }
             
-            max_videos_for_grpo = min(len(processed_video_files), 5)  # Conservative limit
-            used_video_files = processed_video_files[:max_videos_for_grpo]
-            
-            if len(processed_video_files) > max_videos_for_grpo:
-                print(f"GRPO: Using {max_videos_for_grpo}/{len(processed_video_files)} videos due to tensor dimension constraints")
-            
-            # Create individual content items for each video (like SFT approach)
-            for video_file in used_video_files:
-                video_content = {
-                    "type": "video", 
-                    "video": video_file,  # Single video path per content item (like SFT)
-                    "min_pixels": self.video_min_pixel,
-                    "max_pixels": self.video_max_pixel,
-                }
+            if self.nframes is not None:
+                all_videos_content["nframes"] = self.nframes
+            else:
+                all_videos_content["fps"] = self.fps
                 
-                if self.nframes is not None:
-                    video_content["nframes"] = self.nframes
-                else:
-                    video_content["fps"] = self.fps
-                    
-                if self.video_resized_w is not None and self.video_resized_h is not None:
-                    video_content["resized_width"] = self.video_resized_w
-                    video_content["resized_height"] = self.video_resized_h
-                    
-                contents.append(video_content)
+            if self.video_resized_w is not None and self.video_resized_h is not None:
+                all_videos_content["resized_width"] = self.video_resized_w
+                all_videos_content["resized_height"] = self.video_resized_h
+                
+            contents.append(all_videos_content)
 
         conversations = copy.deepcopy(llava_to_openai(sources['conversations'], is_video=is_video))
 
